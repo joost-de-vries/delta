@@ -18,12 +18,12 @@ object comparator extends Poly1 {
 
 /** turns a LabelledGeneric into tuples of keyname to value */
 object toMap extends Poly1 {
-  implicit def recordToTuple[K, V](implicit witness: Witness.Aux[K]): Case.Aux[FieldType[K, V], (String, V)] = at[FieldType[K, V]] { value => (witness.value.asInstanceOf[Symbol].name, value) }
+  implicit def recordToTuple[K <: Symbol, V](implicit witness: Witness.Aux[K]): Case.Aux[FieldType[K, V], (String, V)] =
+    at[FieldType[K, V]] { value => (witness.value.name, value) }
 }
 
-
 object Compare {
-  /** compares two case classes. returns an hlist of Delta. */
+  /** compares two case class instances. returns an hlist of tagged Delta. */
   def compare[P <: Product, LG <: HList, K <: HList, G <: HList, M <: HList, Z <: HList, Out <: HList]
   (p1: P, p2: P)(implicit
                  gen: Generic.Aux[P, G],
@@ -37,5 +37,4 @@ object Compare {
     val gen2 = gen.to(p2)
     gen1.zip(gen2).map(comparator).zipWithKeys(keys())
   }
-
 }

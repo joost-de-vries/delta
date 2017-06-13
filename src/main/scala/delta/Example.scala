@@ -21,14 +21,13 @@ object ExampleChanges extends App {
   )
 
   val changes = events.zip(events.tail).foldLeft(List.empty[Changes]) { case (acc, (prev, next)) => {
-    val result = Compare.compare(prev, next)
+    val nextWithTime = next.copy(time = prev.time) //changes in timestamps are not interesting. will be filtered out
+    val result = Compare.compare(prev, nextWithTime)
     val asMap = result
       .map(toMap)
       .toList
       .filter {
-        case (k, _: Equal.type) =>
-          false //we're only interested in what's changed
-        case ("time", _) => false //changes in timestamps are not interesting
+        case (_, _: Equal.type) => false //we're only interested in what's changed
         case _ => true
       }.toMap
     Changes(prev, next, asMap) :: acc
