@@ -1,5 +1,5 @@
 # delta
-If you have an eventlog of case class instances and you want show the end user a message what's changed without a lot of boilerplate. This uses Shapeless.
+Use case: If you have an eventlog of case class instances and you want to show the end user a message what's changed without a lot of boilerplate. This uses Shapeless.
 
 ```scala
 case class Measurement(time: Long, posX: Long, posY: Long)
