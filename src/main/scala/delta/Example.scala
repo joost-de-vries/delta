@@ -27,7 +27,7 @@ object ExampleChanges extends App {
       .map(toMap)
       .toList
       .filter {
-        case (_, _: Equal.type) => false //we're only interested in what's changed
+        case (_, Equal) => false //we're only interested in what's changed
         case _ => true
       }.toMap
     Changes(prev, next, asMap) :: acc
