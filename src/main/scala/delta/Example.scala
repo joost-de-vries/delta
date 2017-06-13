@@ -23,8 +23,8 @@ object ExampleChanges extends App {
   val changes = events.zip(events.tail).foldLeft(List.empty[Changes]) { case (acc, (prev, next)) => {
     val result = Compare.compare(prev, next)
     val asMap = result
-      .map(toMap).
-      toList
+      .map(toMap)
+      .toList
       .filter {
         case (k, _: Equal.type) =>
           false //we're only interested in what's changed
