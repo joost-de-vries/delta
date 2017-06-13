@@ -18,7 +18,7 @@ object SimpleExample extends App {
     Measurement(time = 125, x = 5, y = 5)
   )
 
-  val zero = List.empty[Changes[Measurement]]
+  val zero = List.empty[Changes]
 
   val changes = events.zip(events.tail).foldLeft(zero) { case (acc, (prev, next)) => {
     val result = Compare.compare(prev, next)
@@ -35,7 +35,20 @@ object SimpleExample extends App {
   }
   }.reverse
 
-  println(s"results $changes")
+  println(s"results ${changes.mkString("\n")}")
 }
 
-case class Changes[A](prev:A,next:A, changes:Map[String,Delta[_]])
+case class Changes(prev:Measurement,next:Measurement, changes:Map[String,Delta[_]]){
+  override def toString={
+    val prefix = s"from ${prev.time} to ${next.time}:"
+    if(changes.isEmpty){
+      s"$prefix no changes"
+    }else{
+      val msgs = changes.mapValues{
+        case Equal => "not changed"
+        case Different(a,b) => s"from $a to $b"
+      }
+      s"$prefix \n\t${msgs.mkString("\n\t")}"
+    }
+  }
+}
